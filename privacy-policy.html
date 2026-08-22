@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChatLens — Privacy Policy</title>
+<meta name="description" content="ChatLens is a 100% local Chrome extension. No servers, no AI, no tracking. Here is exactly what that means." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%230B0D18%22/><path d=%22M4 14 L8 14 L10 9 L13 18 L15 6 L17 14 L20 14%22 stroke=%22%238C7CFF%22 stroke-width=%221.6%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>" />
+<style>
+  :root {
+    --bg: #0B0D18;
+    --bg-elevated: #121423;
+    --bg-card: #171933;
+    --bg-card-hover: #1D2040;
+    --divider: rgba(255, 255, 255, 0.08);
+    --divider-strong: rgba(255, 255, 255, 0.14);
+
+    --accent-you: #8C7CFF;
+    --accent-you-dim: rgba(140, 124, 255, 0.14);
+    --accent-them: #3FE8C9;
+    --accent-them-dim: rgba(63, 232, 201, 0.14);
+    --accent-gold: #F2A93B;
+    --accent-gold-dim: rgba(242, 169, 59, 0.14);
+    --accent-danger: #FF6B81;
+
+    --text-primary: #F4F2FB;
+    --text-secondary: #B8BAD1;
+    --text-muted: #71749A;
+
+    --font-display: -apple-system, "SF Pro Display", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    --font-body: -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "SF Mono", "Cascadia Code", "Consolas", ui-monospace, monospace;
+
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+
+    --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.35);
+    --shadow-glow-you: 0 0 40px -10px rgba(140, 124, 255, 0.35);
+    --shadow-glow-them: 0 0 40px -10px rgba(63, 232, 201, 0.30);
+
+    --content-w: 760px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ambient background glow, fixed, behind everything */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(680px 420px at 8% -6%, var(--accent-you-dim), transparent 60%),
+      radial-gradient(680px 420px at 96% 8%, var(--accent-them-dim), transparent 60%);
+  }
+
+  /* ---- scroll progress ---- */
+  .progress-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 100;
+    background: transparent;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-you), var(--accent-them));
+    transition: width 80ms linear;
+  }
+
+  /* ---- header ---- */
+  header.site {
+    position: sticky;
+    top: 3px;
+    z-index: 90;
+    background: rgba(11, 13, 24, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--divider);
+  }
+  .header-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .doc-pill {
+    font-size: 12px;
+    color: var(--text-secondary);
+    border: 1px solid var(--divider-strong);
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+
+  main { position: relative; z-index: 1; }
+
+  .layout {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* ---- hero ---- */
+  .hero {
+    max-width: var(--content-w);
+    padding: 64px 0 40px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-them);
+    margin-bottom: 14px;
+  }
+  h1.hero-title {
+    font-family: var(--font-display);
+    font-size: 38px;
+    line-height: 1.2;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+    background: linear-gradient(100deg, var(--text-primary) 55%, var(--accent-them) 120%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 16.5px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    margin: 0 0 28px;
+  }
+
+  .pulse-wrap {
+    width: 100%;
+    max-width: 560px;
+    height: 46px;
+    margin-bottom: 28px;
+  }
+  .pulse-wrap svg { width: 100%; height: 100%; display: block; }
+  .pulse-line {
+    fill: none;
+    stroke: url(#pulseGradient);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: draw-pulse 1.6s ease-out 0.2s forwards;
+  }
+  @keyframes draw-pulse {
+    to { stroke-dashoffset: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-line { animation: none; stroke-dashoffset: 0; }
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: 999px;
+    padding: 7px 14px 7px 11px;
+  }
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-them);
+    box-shadow: 0 0 8px var(--accent-them);
+    flex-shrink: 0;
+  }
+
+  /* ---- toc ---- */
+  nav.toc {
+    position: sticky;
+    top: 84px;
+    padding-top: 64px;
+    font-size: 13px;
+  }
+  nav.toc .toc-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  nav.toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  nav.toc a {
+    display: block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+    transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+  }
+  nav.toc a:hover { color: var(--text-primary); background: var(--bg-card); }
+  nav.toc a.active {
+    color: var(--text-primary);
+    background: var(--accent-you-dim);
+    border-left-color: var(--accent-you);
+  }
+
+  .toc-mobile {
+    display: none;
+  }
+
+  /* ---- content ---- */
+  .content {
+    max-width: var(--content-w);
+    padding-bottom: 100px;
+  }
+
+  section.policy-section {
+    padding: 30px 0;
+    border-top: 1px solid var(--divider);
+    scroll-margin-top: 90px;
+  }
+  section.policy-section:first-of-type { border-top: none; padding-top: 4px; }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .section-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-icon.you { background: var(--accent-you-dim); }
+  .section-icon.them { background: var(--accent-them-dim); }
+  .section-icon.gold { background: var(--accent-gold-dim); }
+
+  h2.section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .policy-section p { color: var(--text-secondary); margin: 0 0 14px; }
+  .policy-section p:last-child { margin-bottom: 0; }
+  .policy-section strong { color: var(--text-primary); font-weight: 600; }
+  .policy-section code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 2px 6px;
+    color: var(--accent-them);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+  }
+  .info-card.does { box-shadow: var(--shadow-glow-them); }
+  .info-card.does-not { box-shadow: var(--shadow-glow-you); }
+  .info-card h3 {
+    font-family: var(--font-display);
+    font-size: 14px;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-card ul { margin: 0; padding-left: 18px; color: var(--text-secondary); font-size: 13.5px; }
+  .info-card li { margin-bottom: 8px; }
+  .info-card li:last-child { margin-bottom: 0; }
+
+  ul.plain-list { padding-left: 20px; color: var(--text-secondary); margin: 0; }
+  ul.plain-list li { margin-bottom: 10px; }
+  ul.plain-list li:last-child { margin-bottom: 0; }
+
+  table.perm-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 13.5px;
+  }
+  table.perm-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 0 0 10px;
+    border-bottom: 1px solid var(--divider-strong);
+  }
+  table.perm-table td {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--divider);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+  table.perm-table td:first-child {
+    font-family: var(--font-mono);
+    color: var(--accent-them);
+    white-space: nowrap;
+    padding-right: 18px;
+    width: 130px;
+  }
+  table.perm-table tr:last-child td { border-bottom: none; }
+
+  .callout {
+    display: flex;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    margin-top: 16px;
+  }
+  .callout-icon { flex-shrink: 0; margin-top: 1px; }
+  .callout p { margin: 0; font-size: 13.5px; }
+
+  .delete-btn-demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    background: transparent;
+    border: 1px solid rgba(255, 107, 129, 0.4);
+    color: var(--accent-danger);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ---- footer ---- */
+  footer.site {
+    border-top: 1px solid var(--divider);
+    padding: 32px 24px 48px;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-inner p { margin: 0; font-size: 13px; color: var(--text-muted); }
+  .footer-links { display: flex; gap: 18px; }
+  .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+  .footer-links a:hover { color: var(--text-primary); }
+
+  /* ---- responsive ---- */
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; gap: 0; }
+    nav.toc { display: none; }
+    .toc-mobile {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 14px 24px 6px;
+      margin: 0 -24px 8px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .toc-mobile::-webkit-scrollbar { display: none; }
+    .toc-mobile a {
+      flex-shrink: 0;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: 999px;
+      padding: 7px 14px;
+      white-space: nowrap;
+    }
+    h1.hero-title { font-size: 30px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true"></div>
+
+<div class="progress-track" aria-hidden="true">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<header class="site">
+  <div class="header-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M4 14 L8 14 L10 8 L13 18 L15 5 L17 14 L20 14" stroke="#8C7CFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="brand-name">ChatLens</span>
+    </a>
+    <div class="header-meta">
+      <span class="doc-pill">Privacy Policy</span>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="layout">
+    <div></div>
+    <div class="hero">
+      <div class="eyebrow">Last updated · August 2026</div>
+      <h1 class="hero-title">Your conversations stay exactly where you had them.</h1>
+      <p class="hero-sub">
+        ChatLens turns a WhatsApp export into local analytics and a shareable
+        story — without ever sending a single byte of it anywhere. This page
+        explains, plainly, what that means.
+      </p>
+
+      <div class="pulse-wrap" aria-hidden="true">
+        <svg viewBox="0 0 560 46" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="pulseGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#8C7CFF"/>
+              <stop offset="100%" stop-color="#3FE8C9"/>
+            </linearGradient>
+          </defs>
+          <path class="pulse-line" d="M0,23 L110,23 L128,8 L150,40 L168,4 L188,23 L560,23"/>
+        </svg>
+      </div>
+
+      <div class="badges">
+        <span class="badge"><span class="badge-dot"></span>No servers</span>
+        <span class="badge"><span class="badge-dot"></span>No AI, no telemetry</span>
+        <span class="badge"><span class="badge-dot"></span>Zero host permissions</span>
+        <span class="badge"><span class="badge-dot"></span>One-click delete</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-label">On this page</div>
+      <ul>
+        <li><a href="#short-version">The short version</a></li>
+        <li><a href="#processes">What we process</a></li>
+        <li><a href="#storage">What is stored</a></li>
+        <li><a href="#never">What we never do</a></li>
+        <li><a href="#permissions">Permissions</a></li>
+        <li><a href="#control">Your control</a></li>
+        <li><a href="#changes">Changes</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="content">
+
+      <div class="toc-mobile" aria-label="Table of contents">
+        <a href="#short-version">Short version</a>
+        <a href="#processes">Processing</a>
+        <a href="#storage">Storage</a>
+        <a href="#never">Never does</a>
+        <a href="#permissions">Permissions</a>
+        <a href="#control">Your control</a>
+        <a href="#changes">Changes</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <section class="policy-section" id="short-version">
+        <div class="section-head">
+          <span class="section-icon them">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#3FE8C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h2 class="section-title">The short version</h2>
+        </div>
+        <p>
+          ChatLens has no backend server, no analytics, no telemetry, and no
+          network permissions of any kind. Everything happens on your own
+          device, inside your own browser tab. We — the developers — never
+          receive, see, or have access to your chat data, in any form.
+        </p>
+      </section>
+
+      <section class="policy-section" id="processes">
+        <div class="section-head">
+          <span class="section-icon you">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="#8C7CFF" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <h2 class="section-title">What ChatLens processes</h2>
+        </div>
+        <p>
+          When you choose to upload a WhatsApp chat export (a <code>.txt</code>
+          or <code>.zip</code> file you export yourself, from inside WhatsApp),
+          ChatLens parses that file entirely within its own extension page,
+          using a Web Worker to keep the browser responsive. This processing
+          never leaves your device — there is no upload step, because there
+          is nowhere for it to go.
+        </p>
+      </section>
+
+      <section class="policy-section" id="storage">
+        <div class="section-head">
+          <span class="section-icon them">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#3FE8C9" stroke-width="2"/><path d="M4 10h16" stroke="#3FE8C9" stroke-width="2"/></svg>
+          </span>
+          <h2 class="section-title">What is stored, and where</h2>
+        </div>
+        <ul class="plain-list">
+          <li>
+            Only <strong>aggregated statistics</strong> — counts, percentages,
+            scores, and award unlocks — are saved, using Chrome's
+            <code>chrome.storage.local</code> API, which is sandboxed to the
+            extension and stays on your device.
+          </li>
+          <li>
+            <strong>Raw message text is never persisted.</strong> It exists
+            only in memory during the single parsing pass that produces your
+            statistics.
+          </li>
+          <li>
+            If you export "with media," photo/video/voice-note previews are
+            decoded directly into in-memory <code>blob:</code> references for
+            the current tab only. They are never written to disk, never added
+            to <code>chrome.storage.local</code>, and never transmitted
+            anywhere — they disappear the moment the tab closes or a new chat
+            is uploaded.
+          </li>
+        </ul>
+      </section>
+
+      <section class="policy-section" id="never">
+        <div class="section-head">
+          <span class="section-icon you">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8C7CFF" stroke-width="2"/><path d="M9 9l6 6M15 9l-6 6" stroke="#8C7CFF" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <h2 class="section-title">What ChatLens never does</h2>
+        </div>
+        <div class="card-grid">
+          <div class="info-card does">
+            <h3>What we do</h3>
+            <ul>
+              <li>Parse your file locally, in this browser tab</li>
+              <li>Store aggregate stats on your device only</li>
+              <li>Let you delete everything, any time</li>
+            </ul>
+          </div>
+          <div class="info-card does-not">
+            <h3>What we don't</h3>
+            <ul>
+              <li>Send your chat, or anything derived from it, anywhere</li>
+              <li>Use AI, remote code, or third-party scripts</li>
+              <li>Track, profile, or show you ads</li>
+              <li>Sell or transfer your data to anyone</li>
+              <li>Request access to any website — zero host permissions</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="policy-section" id="permissions">
+        <div class="section-head">
+          <span class="section-icon gold">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="#F2A93B" stroke-width="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke="#F2A93B" stroke-width="2"/></svg>
+          </span>
+          <h2 class="section-title">Permissions we request, and why</h2>
+        </div>
+        <table class="perm-table">
+          <thead>
+            <tr><th>Permission</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>storage</td>
+              <td>Saves your aggregated statistics locally, so you don't have to re-upload your chat every time you open the extension.</td>
+            </tr>
+            <tr>
+              <td>alarms</td>
+              <td>Powers an optional, off-by-default local reminder you can enable in Settings.</td>
+            </tr>
+            <tr>
+              <td>notifications</td>
+              <td>Shows that same optional reminder as a native Chrome notification, only if you turn it on.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <span class="callout-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#3FE8C9" stroke-width="1.6"/><path d="M12 8v5M12 16h.01" stroke="#3FE8C9" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </span>
+          <p>No host permissions are requested at all — ChatLens cannot read or interact with any website, including WhatsApp Web.</p>
+        </div>
+      </section>
+
+      <section class="policy-section" id="control">
+        <div class="section-head">
+          <span class="section-icon them">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="#3FE8C9" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <h2 class="section-title">Your control over your data</h2>
+        </div>
+        <p>
+          You can delete everything ChatLens has stored, at any time, with
+          one click from the Privacy page inside the extension itself.
+        </p>
+        <button class="delete-btn-demo" disabled aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Delete all ChatLens data
+        </button>
+      </section>
+
+      <section class="policy-section" id="changes">
+        <div class="section-head">
+          <span class="section-icon you">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 12a9 9 0 11-3-6.7" stroke="#8C7CFF" stroke-width="2" stroke-linecap="round"/><path d="M21 4v5h-5" stroke="#8C7CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h2 class="section-title">Changes to this policy</h2>
+        </div>
+        <p>
+          If this policy changes, the "Last updated" date at the top of this
+          page will change too. Continued use of ChatLens after an update
+          means you accept the revised policy.
+        </p>
+      </section>
+
+      <section class="policy-section" id="contact">
+        <div class="section-head">
+          <span class="section-icon gold">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#F2A93B" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="#F2A93B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h2 class="section-title">Contact</h2>
+        </div>
+        <p>
+          Questions about this policy? Reach out via the support link on the
+          ChatLens Chrome Web Store listing page.
+        </p>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <p>© 2026 ChatLens. All data stays on your device.</p>
+    <div class="footer-links">
+      <a href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var fill = document.getElementById('progressFill');
+    function onScroll() {
+      var doc = document.documentElement;
+      var scrollTop = doc.scrollTop || document.body.scrollTop;
+      var height = doc.scrollHeight - doc.clientHeight;
+      var pct = height > 0 ? (scrollTop / height) * 100 : 0;
+      fill.style.width = pct + '%';
+    }
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.policy-section'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    if ('IntersectionObserver' in window && sections.length && links.length) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var id = entry.target.getAttribute('id');
+          var link = links.filter(function (a) { return a.getAttribute('href') === '#' + id; })[0];
+          if (!link) return;
+          if (entry.isIntersecting) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            link.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+      sections.forEach(function (s) { observer.observe(s); });
+    }
+  })();
+</script>
+
+</body>
+</html>
